@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="addAccount">新增账号</el-button>
+    <div style="padding: 20px">
+        <el-button type="primary" @click="addAnnouncement">新增公告</el-button>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -14,34 +16,29 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="名字">
+      <el-table-column label="公告主题">
         <template slot-scope="scope">
-          {{ scope.row.stu_name }}
+          {{ scope.row.theme }}
         </template>
       </el-table-column>
-      <el-table-column label="性别" align="center">
+      <el-table-column label="公告详细内容" align="center">
         <template slot-scope="scope">
-          {{ scope.row.stu_sex }}
+          {{ scope.row.content }}
         </template>
       </el-table-column>
-      <el-table-column label="所属学院" align="center">
+      <el-table-column label="发布日期" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.stu_academy }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="学号" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.stu_number }}
+          <span>{{ scope.row.publishTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="联系方式" align="center">
         <template slot-scope="scope">
-          {{ scope.row.stu_phone }}
+          {{ scope.row.phone }}
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" align="center">
+      <el-table-column label="备注" align="center">
         <template slot-scope="scope">
-          {{ scope.row.stu_email }}
+          {{ scope.row.remark }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="400px">
@@ -49,38 +46,26 @@
           <el-button type="primary" @click="edit(scope.row._id)"
             >编辑</el-button
           >
-          <el-button type="danger" @click="deleteAccount(scope.row._id)"
-            >删除</el-button
-          >
-          <el-button type="success" @click="resetPassword(scope.row._id)"
-            >重置密码</el-button
+          <el-button type="danger" @click="deleteAnnouncement(scope.row._id)"
+            >撤销</el-button
           >
         </template>
       </el-table-column>
     </el-table>
     <!-- 新增弹窗 -->
-    <el-dialog title="新增账号" :visible.sync="dialogFormVisible">
+    <el-dialog title="新增公告" :visible.sync="dialogFormVisible">
       <el-form :model="form">
-        <el-form-item label="名字" :label-width="formLabelWidth">
-          <el-input v-model="form.stu_name" auto-complete="off"></el-input>
+        <el-form-item label="公告主题" :label-width="formLabelWidth">
+          <el-input v-model="form.theme" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别" :label-width="formLabelWidth">
-          <el-select v-model="form.stu_sex" placeholder="请选择">
-            <el-option label="男" value="男"></el-option>
-            <el-option label="女" value="女"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="所属学院" :label-width="formLabelWidth">
-          <el-input v-model="form.stu_academy" auto-complete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="工号" :label-width="formLabelWidth">
-          <el-input v-model="form.stu_number" auto-complete="off"></el-input>
+        <el-form-item label="公告详细内容" :label-width="formLabelWidth">
+          <el-input v-model="form.content" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="联系方式" :label-width="formLabelWidth">
-          <el-input v-model="form.stu_phone" auto-complete="off"></el-input>
+          <el-input v-model="form.phone" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" :label-width="formLabelWidth">
-          <el-input v-model="form.stu_email" auto-complete="off"></el-input>
+        <el-form-item label="备注" :label-width="formLabelWidth">
+          <el-input v-model="form.remark" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -93,12 +78,11 @@
 
 <script>
 import {
-  getStudentsList,
-  findStudent,
-  addStudent,
-  deleteStudent,
-  resetPassword
-} from "@/api/student";
+  getAnnouncementsList,
+  findAnnouncement,
+  addAnnouncement,
+  deleteAnnouncement
+} from "@/api/announcement";
 
 export default {
   data() {
@@ -107,13 +91,14 @@ export default {
       listLoading: false,
       dialogFormVisible: false,
       form: {
-        _id: "",
-        stu_name: "",
-        stu_sex: "",
-        stu_academy: "",
-        stu_number: "",
-        stu_phone: "",
-        stu_email: ""
+        _id: "",          // 公告_id
+        theme: "",        // 公告主题
+        content: "",      // 公告内容
+        publisher: "",    // 发布者
+        phone: "",        // 联系方式
+        publishTime: "",  // 发布时间
+        remark: "",       // 备注
+        isPublish: true   // 是否发布
       },
       formLabelWidth: "120px"
     };
@@ -124,7 +109,7 @@ export default {
   methods: {
     // 重置密码
     resetPassword(id) {
-      this.$confirm("此操作将重置该账号为默认密码, 是否继续?", "提示", {
+      this.$confirm("此操作将重置该公告为默认密码, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -143,22 +128,22 @@ export default {
           });
         });
     },
-    // 编辑账号
+    // 编辑公告
     edit(id) {
-      findStudent({ id: id }).then(res => {
+      findAnnouncement({ id: id }).then(res => {
         this.form = res.data;
         this.dialogFormVisible = true;
       });
     },
-    // 删除账号
-    deleteAccount(id) {
-      this.$confirm("此操作将永久删除该账号, 是否继续?", "提示", {
+    // 删除公告
+    deleteAnnouncement(id) {
+      this.$confirm("此操作将永久删除该公告, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       })
         .then(() => {
-          deleteStudent({ id: id }).then(res => {
+          deleteAnnouncement({ id: id }).then(res => {
             this.fetchData();
           });
           this.$message({
@@ -176,23 +161,28 @@ export default {
     // 确认新增
     addSubmit(id) {
       this.form._id = id;
-      addStudent(this.form).then(res => {
+      if(!this.form.publishTime){
+        this.form.publishTime = new Date();
+      }
+      addAnnouncement(this.form).then(res => {
         // console.log(res);
       });
       // 新增后重新刷新列表数据
       this.fetchData();
       this.dialogFormVisible = false;
     },
-    // 新增账号
-    addAccount() {
-      this.form._id = "";
-      this.dialogFormVisible = true;
+    // 新增公告
+    addAnnouncement() {
+        // this.$refs[form].resetFields()
+        this.form._id = "";
+        this.dialogFormVisible = true;
     },
     // 获取列表数据
     fetchData() {
       this.listLoading = true;
-      getStudentsList().then(response => {
+      getAnnouncementsList().then(response => {
         this.list = response.data;
+        // Object.assign(this.list,  response.data)
         // 强制页面重新更新数据
         this.$set(this.list);
         this.listLoading = false;

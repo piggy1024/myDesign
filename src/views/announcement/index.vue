@@ -28,12 +28,17 @@
           {{ scope.row.publisher }}
         </template>
       </el-table-column>
+      <el-table-column label="发布日期" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.publishTime }}
+        </template>
+      </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getAnnouncementsList } from '@/api/announcement'
 
 export default {
   filters: {
@@ -49,18 +54,6 @@ export default {
   data() {
     return {
       list: [
-        {
-            "_id": {
-                "$oid": "5fc8bdb55183896ff40cedd9"
-            },
-            "theme": "放假通知",
-            "content": "10月1日-10月9号放假,不会进行审批管理.",
-            "publisher": "admin",
-            "publishTime": {
-                "$date": "2020-09-30T16:00:00.000Z"
-            },
-            "isPublish": true
-        }
       ],
       listLoading: false
     }
@@ -70,11 +63,11 @@ export default {
   },
   methods: {
     fetchData() {
-      // this.listLoading = true
-      // getList().then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+      this.listLoading = true
+      getAnnouncementsList().then(response => {
+        this.list = response.data
+        this.listLoading = false
+      })
     }
   }
 }

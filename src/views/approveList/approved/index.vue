@@ -13,51 +13,42 @@
           {{ scope.$index }}
         </template>
       </el-table-column>
-      <el-table-column label="申请单位" width="110">
+      <el-table-column label="申请单位">
         <template slot-scope="scope">
           {{ scope.row.applicant }}
         </template>
       </el-table-column>
-      <el-table-column label="申请使用时间">
-        <template slot-scope="scope">
-          {{ scope.row.app_time }}
-        </template>
-      </el-table-column>
-      <el-table-column label="申请联系人" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.applicant }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="申请联系方式" width="110" align="center">
+      <el-table-column label="申请联系人" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.app_phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="教室规模" width="110" align="center">
+      <el-table-column label="审批时间" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_size }}
+          {{ scope.row.app_passTime }}
         </template>
       </el-table-column>
-      <el-table-column label="教室类型" align="center">
+      <el-table-column label="审批原因" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_roomType }}
+          {{ scope.row.reason }}
         </template>
       </el-table-column>
-      <el-table-column label="活动类型" width="110" align="center">
+      <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_type }}
+          {{ scope.row.status ? "已审批" : "未审批" }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
-        <el-button type="success">审批通过</el-button>
-        <el-button type="danger">审批驳回</el-button>
+        <template slot-scope="scope">
+          <el-button type="danger" @click="withdraw(scope.row._id)">撤回审批</el-button>
+        </template>
       </el-table-column>
     </el-table>
   </div>
 </template>
 
 <script>
-import { getApplicationsList } from '@/api/application'
+import { getAuditedList, withdrawApply } from '@/api/application'
 
 export default {
   data() {
@@ -69,15 +60,23 @@ export default {
   created() {
     this.fetchData()
   },
-  mounted(){
-  },
   methods: {
-    fetchData() {
-      this.listLoading = true
-      getApplicationsList().then(response => {
-        this.list = response.data;
-        this.listLoading = false;
+
+    // 撤回审批
+    withdraw(id){
+      withdrawApply({'_id':id}).then(res=>{
+        console.log(res);
       })
+      this.fetchData()
+    },
+    // 获取列表
+    fetchData() {
+      this.listLoading = true;
+      getAuditedList().then(response => {
+        this.list = response.data;
+        console.log(this.list);
+        this.listLoading = false;
+      });
     }
   }
 }

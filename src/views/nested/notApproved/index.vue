@@ -40,7 +40,7 @@
       </el-table-column>
       <el-table-column label="教室类型" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_roomType }}
+          {{ scope.row.app_roomType ? "多媒体教室" : "非多媒体" }}
         </template>
       </el-table-column>
       <el-table-column label="活动类型" width="110" align="center">
@@ -57,28 +57,27 @@
 </template>
 
 <script>
-import { getApplicationsList } from '@/api/application'
+import { getApplicationsList } from "@/api/application";
 
 export default {
   data() {
     return {
       list: [],
       listLoading: false
-    }
+    };
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
-  mounted(){
-  },
+  mounted() {},
   methods: {
     fetchData() {
-      this.listLoading = true
+      this.listLoading = true;
       getApplicationsList().then(response => {
         this.list = response.data;
         this.listLoading = false;
-      })
+      });
     }
   }
-}
+};
 </script>

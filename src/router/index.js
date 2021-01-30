@@ -70,6 +70,36 @@ export const constantRoutes = [{
       }
     }]
   },
+
+  // 公告 管理
+  {
+    path: '/announcementManagement',
+    component: Layout,
+    redirect: '/announcementManagement/announcementManage',
+    name: 'AnnouncementManagement',
+    meta: {
+      title: '公告管理',
+      icon: 'nested'
+    },
+    children: [{
+        path: 'announcementManage',
+        component: () => import('@/views/announcementManagement/announcementManage'), // Parent router-view
+        name: 'announcementManage',
+        meta: {
+          title: '公告列表'
+        },
+      },
+      {
+        path: 'studentManage',
+        component: () => import('@/views/accountManagement/studentManage'),
+        name: 'StudentManage',
+        meta: {
+          title: '学生账号管理'
+        }
+      }
+    ]
+  },
+
   // 公告列表路由
   {
     path: '/announcement',
@@ -86,18 +116,18 @@ export const constantRoutes = [{
   },
   // 教室使用情况
   {
-    path: '/example',
+    path: '/classroom',
     component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
+    redirect: '/classroom/classroomList',
+    name: 'Classroom',
     meta: {
       title: '教室使用情况',
       icon: 'el-icon-s-help'
     },
     children: [{
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
+        path: 'classroomList',
+        name: 'ClassroomList',
+        component: () => import('@/views/classroomList/index'),
         meta: {
           title: '教室列表',
           icon: 'table'
@@ -130,18 +160,26 @@ export const constantRoutes = [{
   },
   // 审核情况
   {
-    path: '/nested',
+    path: '/approveList',
     component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
+    redirect: '/approveList/notApprove',
+    name: 'ApproveList',
     meta: {
       title: '审核情况',
       icon: 'nested'
     },
     children: [{
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
+        path: 'approved',
+        component: () => import('@/views/approveList/approved/index'),
+        name: 'Approved',
+        meta: {
+          title: '已审核列表'
+        }
+      },
+      {
+        path: 'notApprove',
+        component: () => import('@/views/approveList/notApprove/index'),
+        name: 'NotApprove',
         meta: {
           title: '未审核列表'
         },
@@ -187,14 +225,6 @@ export const constantRoutes = [{
         //     }
         //   }
         // ]
-      },
-      {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        name: 'Menu2',
-        meta: {
-          title: '已审核列表'
-        }
       }
     ]
   },
