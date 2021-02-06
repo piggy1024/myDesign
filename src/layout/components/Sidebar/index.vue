@@ -31,7 +31,12 @@ export default {
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
+      return this.$router.options.routes.filter((item, index) =>{
+        if(item.meta) {
+          if(item.meta.roles.includes(this.$store.state.user.roles[0])) { return true}
+
+        }
+      })
     },
     activeMenu() {
       const route = this.$route

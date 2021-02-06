@@ -46,6 +46,9 @@ export const constantRoutes = [{
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    meta: {
+      roles: ['editor', 'admin']
+    },
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
@@ -60,6 +63,9 @@ export const constantRoutes = [{
   {
     path: '/personnel',
     component: Layout,
+    meta: {
+      roles: ['editor', 'admin']
+    },
     children: [{
       path: 'index',
       name: 'Personnel',
@@ -79,7 +85,8 @@ export const constantRoutes = [{
     name: 'AnnouncementManagement',
     meta: {
       title: '公告管理',
-      icon: 'nested'
+      icon: 'nested',
+      roles: ['admin']
     },
     children: [{
         path: 'announcementManage',
@@ -104,6 +111,9 @@ export const constantRoutes = [{
   {
     path: '/announcement',
     component: Layout,
+    meta: {
+      roles: ['editor', 'admin']
+    },
     children: [{
       path: 'index',
       name: 'Announcement',
@@ -122,7 +132,8 @@ export const constantRoutes = [{
     name: 'Classroom',
     meta: {
       title: '教室使用情况',
-      icon: 'el-icon-s-help'
+      icon: 'el-icon-s-help',
+      roles: ['editor', 'admin']
     },
     children: [{
         path: 'classroomList',
@@ -147,6 +158,9 @@ export const constantRoutes = [{
   // 表单
   {
     path: '/form',
+    meta: {
+      roles: ['editor', 'admin']
+    },
     component: Layout,
     children: [{
       path: 'index',
@@ -166,7 +180,8 @@ export const constantRoutes = [{
     name: 'ApproveList',
     meta: {
       title: '审核情况',
-      icon: 'nested'
+      icon: 'nested',
+      roles: ['admin']
     },
     children: [{
         path: 'approved',
@@ -232,6 +247,9 @@ export const constantRoutes = [{
   {
     path: '/applicationProgress',
     component: Layout,
+    meta: {
+      roles: ['editor', ]
+    },
     children: [{
       path: 'index',
       name: 'Form',
@@ -250,7 +268,8 @@ export const constantRoutes = [{
     name: 'AccountManagement',
     meta: {
       title: '账号管理',
-      icon: 'nested'
+      icon: 'nested',
+      roles: ['admin']
     },
     children: [{
         path: 'adminManage',
@@ -278,6 +297,79 @@ export const constantRoutes = [{
     hidden: true
   }
 ]
+
+
+/**
+ * asyncRoutes   动态路由  根据后端返回的身份决定是否拥有权限进入的路由
+ *
+ * the routes that need to be dynamically loaded based on user roles
+ */
+export const asyncRoutes = [
+  // {
+  //   path: '/permission',
+  //   component: Layout,
+  //   redirect: '/form/index',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Permission',
+  //   meta: {
+  //     title: 'Permission',
+  //     icon: 'lock',
+  //     roles: ['admin', 'editor'] // you can set roles in root nav
+  //   }
+  // },
+  // {
+  //   path: '/form',
+  //   component: Layout,
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Form',
+  //   meta: {
+  //     title: 'Form',
+  //     icon: 'lock',
+  //     roles: ['editor', 'admin'] // you can set roles in root nav
+  //   },
+  // 表单
+  // {
+  //   path: '/form',
+  //   alwaysShow: true,
+  //   component: Layout,
+  //   roles: ['admin'],
+  //   children: [{
+  //     path: 'index',
+  //     name: 'Form',
+  //     component: () => import('@/views/form/index'),
+  //     meta: {
+  //       title: 'Form',
+  //       icon: 'form',
+  //       roles: ['admin']
+  //     }
+  //   }]
+  // },
+  // children: [{
+  //   path: 'index',
+  //   name: 'Form',
+  //   component: () => import('@/views/form/index'),
+  //   meta: {
+  //     title: 'Form',
+  //     icon: 'form',
+  //     roles: ['editor', 'admin']
+  //   }
+  // }]
+  // },
+
+  /** when your routing map is too long, you can split it into small modules **/
+  // componentsRouter,
+  // chartsRouter,
+  // nestedRouter,
+  // tableRouter,
+
+  // 404 page must be placed at the end !!!
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
+  }
+]
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
