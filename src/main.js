@@ -14,6 +14,11 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+// 时间插件
+import moment from 'moment'
+Vue.prototype.$moment = moment
+moment.locale('zh-cn')
+Vue.use(moment)
 
 
 import plan from '@hui-pro/plan';

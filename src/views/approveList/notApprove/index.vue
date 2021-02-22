@@ -88,8 +88,8 @@
 </template>
 
 <script>
-import { getAuditList, resolveApply, rejectApply } from "@/api/application";
-
+import { getAuditList, resolveApply, rejectApply } from "@/api/application"
+import moment from "moment"
 export default {
   data() {
     return {
@@ -98,18 +98,22 @@ export default {
       listLoading: false,
       resolveForm: {
         _id: '',    // 审批的application的id
-        reason: ''  // 审批理由
+        reason: '',  // 审批理由
+        app_passTime: ''  // 审批时间
       },
       dialogResolveFormVisible: false,
       rejectForm: {
         _id: '',
-        reason: ''
+        reason: '',
+        app_passTime: ''
       },
       dialogRejectFormVisible: false,
 
     };
   },
   created() {
+    // console.log(moment(new Date()).format());
+
     this.fetchData();
   },
   mounted() {},
@@ -118,7 +122,7 @@ export default {
     // 确认通过
     resolveSubmit(){
       resolveApply(this.resolveForm).then(res=>{
-        console.log(res);
+        // console.log(res);
       })
       this.dialogResolveFormVisible = false
       this.fetchData();
@@ -126,7 +130,7 @@ export default {
     // 确认驳回
     rejectSubmit(){
       rejectApply(this.rejectForm).then(res=>{
-        console.log(res);
+        // console.log(res);
       })
       this.dialogRejectFormVisible = false
       this.fetchData();
@@ -135,11 +139,13 @@ export default {
     onSuccess(id){
       this.dialogResolveFormVisible = true
       this.resolveForm._id = id
+      this.resolveForm.app_passTime = moment(new Date()).format()
     },
     // 审批驳回
     onFail(id){
       this.dialogRejectFormVisible = true
       this.rejectForm._id = id
+      this.rejectForm.app_passTime = moment(new Date()).format()
     },
     // 获取列表数据
     fetchData() {

@@ -3,7 +3,7 @@
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">Login Form</h3>
+        <h3 class="title">学校资源使用审批系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -41,6 +41,13 @@
         </span>
       </el-form-item>
 
+      <el-form-item prop="identity">
+        <el-radio-group v-model="loginForm.identity">
+          <el-radio label="editor">申请端</el-radio>
+          <el-radio label="admin">审批端</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
       <div class="tips">
@@ -53,13 +60,12 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (value.length < 5) {
         callback(new Error('Please enter the correct user name'))
       } else {
         callback()
@@ -75,7 +81,8 @@ export default {
     return {
       loginForm: {
         username: 'admin',
-        password: '111111'
+        password: '111111',
+        identity: 'admin'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],

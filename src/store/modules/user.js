@@ -17,7 +17,8 @@ const getDefaultState = () => {
     token: getToken(),
     name: '',
     avatar: '',
-    roles: []
+    roles: [],
+    user_id: ''
   }
 }
 
@@ -38,6 +39,9 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_USER_ID: (state, user_id) => {
+    state.user_id = user_id
   }
 }
 
@@ -48,12 +52,14 @@ const actions = {
   }, userInfo) {
     const {
       username,
-      password
+      password,
+      identity
     } = userInfo
     return new Promise((resolve, reject) => {
       login({
         username: username.trim(),
-        password: password
+        password: password,
+        identity: identity
       }).then(response => {
         const {
           data
@@ -85,12 +91,14 @@ const actions = {
         const {
           name,
           avatar,
-          roles
+          roles,
+          user_id
         } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLES', roles)
+        commit('SET_USER_ID', user_id)
         resolve(data)
       }).catch(error => {
         reject(error)

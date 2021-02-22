@@ -107,27 +107,6 @@ export default {
     this.fetchData();
   },
   methods: {
-    // 重置密码
-    resetPassword(id) {
-      this.$confirm("此操作将重置该公告为默认密码, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      })
-        .then(() => {
-          resetPassword({ id: id }).then(res => {});
-          this.$message({
-            type: "success",
-            message: "重置密码成功!"
-          });
-        })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消重置!"
-          });
-        });
-    },
     // 编辑公告
     edit(id) {
       findAnnouncement({ id: id }).then(res => {
@@ -137,7 +116,7 @@ export default {
     },
     // 删除公告
     deleteAnnouncement(id) {
-      this.$confirm("此操作将永久删除该公告, 是否继续?", "提示", {
+      this.$confirm("此操作将永久撤销该公告, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -148,13 +127,13 @@ export default {
           });
           this.$message({
             type: "success",
-            message: "删除成功!"
+            message: "撤销成功!"
           });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消撤销"
           });
         });
     },
@@ -166,10 +145,11 @@ export default {
       }
       addAnnouncement(this.form).then(res => {
         // console.log(res);
+        // 新增后重新刷新列表数据
+        this.fetchData();
+        this.dialogFormVisible = false;
       });
-      // 新增后重新刷新列表数据
-      this.fetchData();
-      this.dialogFormVisible = false;
+
     },
     // 新增公告
     addAnnouncement() {

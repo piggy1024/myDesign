@@ -15,27 +15,27 @@
       </el-table-column>
       <el-table-column label="申请单位" width="110">
         <template slot-scope="scope">
-          {{ scope.row.content }}
+          {{ scope.row.applicant }}
         </template>
       </el-table-column>
       <el-table-column label="申请联系人" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.theme }}</span>
+          <span>{{ scope.row.app_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="审批时间" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.publisher }}
+          {{ scope.row.app_passTime }}
         </template>
       </el-table-column>
       <el-table-column label="审批原因" align="center">
         <template slot-scope="scope">
-          {{ scope.row.publisher }}
+          {{ scope.row.reason }}
         </template>
       </el-table-column>
       <el-table-column label="审批状态" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.publisher }}
+          {{ scope.row.status }}
         </template>
       </el-table-column>
     </el-table>
@@ -43,19 +43,9 @@
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getApplyList } from '@/api/application'
 
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
   data() {
     return {
       list: [
@@ -80,11 +70,12 @@ export default {
   },
   methods: {
     fetchData() {
-      // this.listLoading = true
-      // getList().then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
+      this.listLoading = true
+      getApplyList().then(res => {
+        this.list = res.data
+        console.log(res.data);
+        this.listLoading = false
+      })
     }
   }
 }

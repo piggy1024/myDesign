@@ -65,7 +65,7 @@ export default {
     // 撤回审批
     withdraw(id){
       withdrawApply({'_id':id}).then(res=>{
-        console.log(res);
+        // console.log(res);
       })
       this.fetchData()
     },
@@ -74,7 +74,7 @@ export default {
       this.listLoading = true;
       getAuditedList().then(response => {
         this.list = response.data;
-        console.log(this.list);
+        // console.log(this.list);
         this.listLoading = false;
       });
     }

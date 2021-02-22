@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 
+// 获取当前用户申请的进度
+export function getApplyList(params) {
+  return request({
+    url: '/applications/applyProcess',
+    method: 'get',
+    params
+  })
+}
+
 // 获取未审批列表
 export function getAuditList(params) {
   return request({

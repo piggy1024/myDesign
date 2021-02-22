@@ -31,6 +31,7 @@ export default {
       'sidebar'
     ]),
     routes() {
+      // 对于不同身份过来出不同的可见的路由
       return this.$router.options.routes.filter((item, index) =>{
         if(item.meta) {
           if(item.meta.roles.includes(this.$store.state.user.roles[0])) { return true}

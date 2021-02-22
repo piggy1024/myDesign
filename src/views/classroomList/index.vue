@@ -50,7 +50,7 @@
           <el-input v-model="form.applicant" placeholder="请输入" />
         </el-form-item>
         <el-form-item label="申请联系人" prop="app_name">
-          <el-input v-model="form.app_name" placeholder="请输入" />
+          <el-input v-model="form.app_name" placeholder="请输入" disabled />
         </el-form-item>
         <el-form-item label="申请联系电话" prop="app_phone">
           <el-input v-model="form.app_phone" placeholder="请输入" />
@@ -126,9 +126,17 @@
 import { getList } from "@/api/table";
 import applicationForm from "@/views/form/index";
 import { addApplication } from "../../api/submit";
+import { mapGetters } from 'vuex'
+import store from '@/store'
 
 export default {
   components: { applicationForm },
+  computed: {
+    ...mapGetters([
+      'name',
+      'user_id'
+    ])
+  },
   data() {
     return {
       list: [],
@@ -137,6 +145,8 @@ export default {
       form: {
         c_id: "",
         app_theme: "",
+        stu_id: store.getters.user_id,  // 当前申请人的学号或者工号
+        app_name: store.getters.name,
         app_phone: "",
         app_type: "",
         app_roomType: "",

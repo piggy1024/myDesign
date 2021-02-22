@@ -177,11 +177,11 @@ export default {
     addSubmit(id) {
       this.form._id = id;
       addStudent(this.form).then(res => {
-        // console.log(res);
+        // 新增后重新刷新列表数据
+        this.fetchData();
+        this.dialogFormVisible = false;
       });
-      // 新增后重新刷新列表数据
-      this.fetchData();
-      this.dialogFormVisible = false;
+
     },
     // 新增账号
     addAccount() {
