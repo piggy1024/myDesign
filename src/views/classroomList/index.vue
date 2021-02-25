@@ -156,7 +156,7 @@ export default {
         app_end_time: "",
         app_content: "",
         app_passTime: "",
-        status: false
+        status: 0
       }
     };
   },
@@ -172,7 +172,6 @@ export default {
     },
     // 确定申请
     addSubmit(formName) {
-      console.log(this.form);
       addApplication(this.form).then(res => {
         // 清空原来表单数据
       });

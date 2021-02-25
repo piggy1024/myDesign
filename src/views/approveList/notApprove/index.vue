@@ -150,8 +150,8 @@ export default {
     // 获取列表数据
     fetchData() {
       this.listLoading = true;
-      getAuditList().then(response => {
-        this.list = response.data;
+      getAuditList().then(res => {
+        this.list = res.data;
         this.listLoading = false;
       });
     }

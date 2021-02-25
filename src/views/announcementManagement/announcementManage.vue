@@ -83,6 +83,7 @@ import {
   addAnnouncement,
   deleteAnnouncement
 } from "@/api/announcement";
+import store from '@/store'
 
 export default {
   data() {
@@ -94,7 +95,7 @@ export default {
         _id: "",          // 公告_id
         theme: "",        // 公告主题
         content: "",      // 公告内容
-        publisher: "",    // 发布者
+        publisher: store.getters.name,    // 发布者
         phone: "",        // 联系方式
         publishTime: "",  // 发布时间
         remark: "",       // 备注

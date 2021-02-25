@@ -44,24 +44,12 @@
 
 <script>
 import { getApplyList } from '@/api/application'
+import store from '@/store'
 
 export default {
   data() {
     return {
-      list: [
-        {
-            "_id": {
-                "$oid": "5fc8bdb55183896ff40cedd9"
-            },
-            "theme": "放假通知",
-            "content": "10月1日-10月9号放假,不会进行审批管理.",
-            "publisher": "admin",
-            "publishTime": {
-                "$date": "2020-09-30T16:00:00.000Z"
-            },
-            "isPublish": true
-        }
-      ],
+      list: [],
       listLoading: false
     }
   },
@@ -71,9 +59,8 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getApplyList().then(res => {
+      getApplyList({user_id: store.getters.user_id}).then(res => {
         this.list = res.data
-        console.log(res.data);
         this.listLoading = false
       })
     }
