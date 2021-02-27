@@ -61,7 +61,6 @@ export default {
     this.fetchData()
   },
   methods: {
-
     // 撤回审批
     withdraw(id){
       this.$confirm("此操作将永久撤回该审批, 是否继续?", "提示", {

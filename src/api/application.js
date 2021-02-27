@@ -9,6 +9,15 @@ export function getApplyList(params) {
   })
 }
 
+// 取消申请
+export function deleteApply(params) {
+  return request({
+    url: '/applications/deleteApply',
+    method: 'post',
+    params
+  })
+}
+
 // 获取未审批列表
 export function getAuditList(params) {
   return request({
