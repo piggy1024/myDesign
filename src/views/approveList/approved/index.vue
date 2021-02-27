@@ -64,10 +64,28 @@ export default {
 
     // 撤回审批
     withdraw(id){
-      withdrawApply({'_id':id}).then(res=>{
-        // console.log(res);
+      this.$confirm("此操作将永久撤回该审批, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
       })
-      this.fetchData()
+        .then(() => {
+          withdrawApply({'_id':id}).then(res=>{
+            // console.log(res);
+          })
+          this.fetchData()
+          this.$message({
+            type: "success",
+            message: "撤回成功!"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消撤回"
+          });
+        });
+
     },
     // 获取列表
     fetchData() {
