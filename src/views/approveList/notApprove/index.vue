@@ -91,6 +91,7 @@
 import { getAuditList, resolveApply, rejectApply } from "@/api/application"
 import moment from "moment"
 import store from '@/store'
+import formatDate from '@/utils/formatDate'
 
 export default {
   data() {
@@ -154,6 +155,12 @@ export default {
       this.listLoading = true;
       getAuditList({ apartment: store.getters.apartment }).then(res => {
         this.list = res.data;
+        // 处理时间格式
+        this.list.forEach(item => {
+          item.app_id.app_start_time = formatDate(item.app_id.app_start_time)
+          item.app_id.app_end_time = formatDate(item.app_id.app_end_time)
+          return item
+        });
         // console.log(res.data);
         this.listLoading = false;
       });

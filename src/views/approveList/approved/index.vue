@@ -30,12 +30,39 @@
       </el-table-column>
       <el-table-column label="审批原因" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_id.reason }}
+          <span v-if="apartment ==='部门'">
+            <span>{{ scope.row.department_reason }}</span>
+          </span>
+          <span v-if="apartment ==='后勤处'">
+            <span>{{ scope.row.logistics_reason }}</span>
+          </span>
+          <span v-if="apartment ==='教务处'">
+            <span>{{ scope.row.technology_center_reason }}</span>
+          </span>
+          <span v-if="apartment ==='教育技术中心'">
+            <span>{{ scope.row.technology_center_reason }}</span>
+          </span>
+          <!-- {{ scope.row.app_id.reason }} -->
         </template>
       </el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_id.status == 1 ? "已通过" : "被驳回" }}
+          <span v-if="apartment ==='部门'">
+            <span>{{ scope.row.department_status === 0 ? "未审批" : "" }}</span>
+            <span>{{ scope.row.department_status == 1 ? "已通过" : "被驳回" }}</span>
+          </span>
+          <span v-if="apartment ==='后勤处'">
+            <span>{{ scope.row.logistics_status === 0 ? "未审批" : "" }}</span>
+            <span>{{ scope.row.logistics_status == 1 ? "已通过" : "被驳回" }}</span>
+          </span>
+          <span v-if="apartment ==='教务处'">
+            <span>{{ scope.row.technology_center_status === 0 ? "未审批" : "" }}</span>
+            <span>{{ scope.row.technology_center_status == 1 ? "已通过" : "被驳回" }}</span>
+          </span>
+          <span v-if="apartment ==='教育技术中心'">
+            <span>{{ scope.row.technology_center_status === 0 ? "未审批" : "" }}</span>
+            <span>{{ scope.row.technology_center_status == 1 ? "已通过" : "被驳回" }}</span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
@@ -50,10 +77,18 @@
 <script>
 import { getAuditedList, withdrawApply } from '@/api/application'
 import store from '@/store'
+import formatDate from '@/utils/formatDate'
 
 export default {
   data() {
     return {
+      apartment: store.getters.apartment,
+      obj: {
+        "部门": "department_status",
+        "教务处": "school_dean_status",
+        "后勤处": "logistics_status",
+        "教育技术中心": "technology_center_status"
+      },
       list: [],
       listLoading: false
     }
@@ -92,7 +127,12 @@ export default {
       this.listLoading = true;
       getAuditedList({ apartment: store.getters.apartment }).then(response => {
         this.list = response.data;
-        // console.log(this.list);
+         // 处理时间格式
+        this.list.forEach(item => {
+          item.app_id.app_passTime = formatDate(item.app_id.app_passTime)
+          return item
+        });
+        console.log(this.list);
         this.listLoading = false;
       });
     }

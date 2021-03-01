@@ -31,6 +31,11 @@
           <span>{{ scope.row.publishTime }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="发布者" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.publisher }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="联系方式" align="center">
         <template slot-scope="scope">
           {{ scope.row.phone }}
@@ -84,6 +89,7 @@ import {
   deleteAnnouncement
 } from "@/api/announcement";
 import store from '@/store'
+import formatDate from '@/utils/formatDate'
 
 export default {
   data() {
@@ -132,10 +138,6 @@ export default {
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消撤销"
-          });
         });
     },
     // 确认新增
@@ -162,7 +164,12 @@ export default {
     fetchData() {
       this.listLoading = true;
       getAnnouncementsList().then(response => {
-        this.list = response.data;
+        this.list = response.data
+        // 处理时间格式
+        this.list.forEach(item => {
+          item.publishTime = formatDate(item.publishTime)
+          return item
+        });
         // Object.assign(this.list,  response.data)
         // 强制页面重新更新数据
         this.$set(this.list);

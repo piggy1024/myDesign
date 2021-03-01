@@ -39,6 +39,7 @@
 
 <script>
 import { getAnnouncementsList } from '@/api/announcement'
+import formatDate from '@/utils/formatDate'
 
 export default {
   filters: {
@@ -66,6 +67,11 @@ export default {
       this.listLoading = true
       getAnnouncementsList().then(response => {
         this.list = response.data
+        // 处理时间格式
+        this.list.forEach(item => {
+          item.publishTime = formatDate(item.publishTime)
+          return item
+        });
         this.listLoading = false
       })
     }

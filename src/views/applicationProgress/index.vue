@@ -23,12 +23,12 @@
           <span>{{ scope.row.app_id.app_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审批时间" width="200" align="center">
+      <el-table-column label="最近一次审批时间" width="200" align="center">
         <template slot-scope="scope">
           {{ scope.row.app_id.app_passTime }}
         </template>
       </el-table-column>
-      <el-table-column label="审批原因" align="center">
+      <el-table-column label="最近一次审批原因" align="center">
         <template slot-scope="scope">
           {{ scope.row.app_id.reason }}
         </template>
@@ -66,6 +66,7 @@
 <script>
 import { getApplyList, deleteApply } from '@/api/application'
 import store from '@/store'
+import formatDate from '@/utils/formatDate'
 
 export default {
   data() {
@@ -133,7 +134,14 @@ export default {
       this.listLoading = true
       getApplyList({user_id: store.getters.user_id}).then(res => {
         this.list = res.data
-        console.log(res.data);
+        // 处理时间格式
+        this.list.forEach(item => {
+          // 如果有审批时间,转化审批时间格式
+          if(item.app_id.app_passTime){
+            item.app_id.app_passTime = formatDate(item.app_id.app_passTime)
+          }
+          return item
+        });
         this.listLoading = false
       })
     }
