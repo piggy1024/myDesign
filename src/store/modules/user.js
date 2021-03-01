@@ -18,7 +18,8 @@ const getDefaultState = () => {
     name: '',
     avatar: '',
     roles: [],
-    user_id: ''
+    user_id: '',
+    apartment: ''
   }
 }
 
@@ -42,6 +43,9 @@ const mutations = {
   },
   SET_USER_ID: (state, user_id) => {
     state.user_id = user_id
+  },
+  SET_APARTMENT: (state, apartment) => {
+    state.apartment = apartment
   }
 }
 
@@ -92,13 +96,15 @@ const actions = {
           name,
           avatar,
           roles,
-          user_id
+          user_id,
+          apartment
         } = data
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLES', roles)
         commit('SET_USER_ID', user_id)
+        commit('SET_APARTMENT', apartment)
         resolve(data)
       }).catch(error => {
         reject(error)

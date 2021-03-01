@@ -15,32 +15,32 @@
       </el-table-column>
       <el-table-column label="申请单位">
         <template slot-scope="scope">
-          {{ scope.row.applicant }}
+          {{ scope.row.app_id.applicant }}
         </template>
       </el-table-column>
       <el-table-column label="申请联系人" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.app_phone }}</span>
+          <span>{{ scope.row.app_id.app_phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="审批时间" align="center">
+      <el-table-column label="最近一次审批时间" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_passTime }}
+          {{ scope.row.app_id.app_passTime }}
         </template>
       </el-table-column>
       <el-table-column label="审批原因" align="center">
         <template slot-scope="scope">
-          {{ scope.row.reason }}
+          {{ scope.row.app_id.reason }}
         </template>
       </el-table-column>
       <el-table-column label="审批状态" align="center">
         <template slot-scope="scope">
-          {{ scope.row.status == 1 ? "已通过" : "被驳回" }}
+          {{ scope.row.app_id.status == 1 ? "已通过" : "被驳回" }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="danger" @click="withdraw(scope.row._id)">撤回审批</el-button>
+          <el-button type="danger" @click="withdraw(scope.row.app_id._id)">撤回审批</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,6 +49,7 @@
 
 <script>
 import { getAuditedList, withdrawApply } from '@/api/application'
+import store from '@/store'
 
 export default {
   data() {
@@ -69,7 +70,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          withdrawApply({'_id':id}).then(res=>{
+          withdrawApply({'_id':id, apartment: store.getters.apartment}).then(res=>{
             // console.log(res);
           })
           this.fetchData()
@@ -89,7 +90,7 @@ export default {
     // 获取列表
     fetchData() {
       this.listLoading = true;
-      getAuditedList().then(response => {
+      getAuditedList({ apartment: store.getters.apartment }).then(response => {
         this.list = response.data;
         // console.log(this.list);
         this.listLoading = false;

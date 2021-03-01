@@ -15,48 +15,48 @@
       </el-table-column>
       <el-table-column label="申请单位" width="110">
         <template slot-scope="scope">
-          {{ scope.row.applicant }}
+          {{ scope.row.app_id.applicant }}
         </template>
       </el-table-column>
       <el-table-column label="申请开始使用时间">
         <template slot-scope="scope">
-          {{ scope.row.app_start_time }}
+          {{ scope.row.app_id.app_start_time }}
         </template>
       </el-table-column>
       <el-table-column label="申请结束使用时间">
         <template slot-scope="scope">
-          {{ scope.row.app_end_time }}
+          {{ scope.row.app_id.app_end_time }}
         </template>
       </el-table-column>
       <el-table-column label="申请联系人" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.applicant }}</span>
+          <span>{{ scope.row.app_id.app_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="申请联系方式" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.app_phone }}</span>
+          <span>{{ scope.row.app_id.app_phone }}</span>
         </template>
       </el-table-column>
       <el-table-column label="教室规模" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_size }}
+          {{ scope.row.app_id.app_size }}
         </template>
       </el-table-column>
       <el-table-column label="教室类型" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_roomType ? "多媒体教室" : "非多媒体" }}
+          {{ scope.row.app_id.app_roomType ? "多媒体教室" : "非多媒体" }}
         </template>
       </el-table-column>
       <el-table-column label="活动类型" width="110" align="center">
         <template slot-scope="scope">
-          {{ scope.row.app_type }}
+          {{ scope.row.app_id.app_type }}
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="success" @click="onSuccess(scope.row._id)">审批通过</el-button>
-          <el-button type="danger" @click="onFail(scope.row._id)">审批驳回</el-button>
+          <el-button type="success" @click="onSuccess(scope.row.app_id._id)">审批通过</el-button>
+          <el-button type="danger" @click="onFail(scope.row.app_id._id)">审批驳回</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,6 +90,8 @@
 <script>
 import { getAuditList, resolveApply, rejectApply } from "@/api/application"
 import moment from "moment"
+import store from '@/store'
+
 export default {
   data() {
     return {
@@ -99,21 +101,21 @@ export default {
       resolveForm: {
         _id: '',    // 审批的application的id
         reason: '',  // 审批理由
-        app_passTime: ''  // 审批时间
+        app_passTime: '',  // 审批时间
+        apartment: store.getters.apartment // 当前人的所在部门(审批)
       },
       dialogResolveFormVisible: false,
       rejectForm: {
         _id: '',
         reason: '',
-        app_passTime: ''
+        app_passTime: '',
+        apartment: store.getters.apartment
       },
       dialogRejectFormVisible: false,
 
     };
   },
   created() {
-    // console.log(moment(new Date()).format());
-
     this.fetchData();
   },
   mounted() {},
@@ -150,8 +152,9 @@ export default {
     // 获取列表数据
     fetchData() {
       this.listLoading = true;
-      getAuditList().then(res => {
+      getAuditList({ apartment: store.getters.apartment }).then(res => {
         this.list = res.data;
+        // console.log(res.data);
         this.listLoading = false;
       });
     }

@@ -41,14 +41,14 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column align="center">
+      <el-table-column label="详情" align="center">
         <template slot-scope="scope">
           <el-button @click="showDetail(scope.$index)">审批详情</el-button>
         </template>
       </el-table-column>
-      <el-table-column align="center">
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button @click="cancelApplication(scope.row.app_id._id)">取消申请</el-button>
+          <el-button type="danger" @click="cancelApplication(scope.row.app_id._id)">取消申请</el-button>
         </template>
       </el-table-column>
     </el-table>
