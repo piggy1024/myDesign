@@ -1,8 +1,29 @@
 <template>
   <div class="app-container">
+    <!-- 筛选条件 -->
+    <div class="filter-box">
+      <el-form ref="filterForm" :inline="true" size="medium" :model="filterForm">
+        <el-form-item prop="classroomName">
+          <el-input style="width: 300px" v-model="filterForm.classroomName" placeholder="教室名称" />
+        </el-form-item>
+        <el-form-item prop="building">
+          <el-input style="width: 300px" v-model="filterForm.building" placeholder="所属楼" />
+        </el-form-item>
+        <el-form-item prop="isMultimedia">
+          <el-input style="width: 300px" v-model="filterForm.isMultimedia" placeholder="是否多媒体教室" />
+        </el-form-item>
+        <el-form-item prop="size">
+          <el-input style="width: 300px" v-model="filterForm.size" placeholder="教室规模" />
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" icon="el-icon-search" round @click="handleQuery">查询</el-button>
+          <el-button type="primary" icon="el-icon-refresh" round plain @click="handleReset('filterForm')">重置</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="showList"
       element-loading-text="Loading"
       border
       fit
@@ -41,6 +62,14 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="listTotal">
+      </el-pagination>
+    </div>
     <el-dialog title="申请使用" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" label-width="120px">
         <el-form-item label="活动主题及内容" prop="app_theme">
@@ -139,7 +168,17 @@ export default {
   },
   data() {
     return {
+      filterForm: {
+        classroomName : '',
+        building: '',
+        isMultimedia: '',
+        size: '',
+        pageNo: 1,
+        pageSize: 2,
+      },
+      listTotal: 0, // 列表总条数
       list: [],
+      showList: [],
       listLoading: false,
       dialogFormVisible: false,
       form: {
@@ -164,6 +203,21 @@ export default {
     this.fetchData();
   },
   methods: {
+    // 改变页码
+    changePage(page){
+      this.showList = this.list.slice(10*(page-1),10*page)
+    },
+    // 查询
+    handleQuery() {
+      this.listTotal = 0
+      this.filterForm.pageNo = 1
+      this.fetchData()
+    },
+    // 重置
+    handleReset(form) {
+      this.$refs[form].resetFields()
+      this.handleQuery()
+    },
     // 申请使用
     apply(id) {
       this.dialogFormVisible = true;
@@ -174,6 +228,10 @@ export default {
     addSubmit(formName) {
       addApplication(this.form).then(res => {
         // 清空原来表单数据
+        this.$message({
+            type: "success",
+            message: "申请成功!"
+          });
       });
       // 关闭弹框
       this.dialogFormVisible = false;
@@ -193,11 +251,20 @@ export default {
     // 获取列表数据
     fetchData() {
       this.listLoading = true;
-      getList().then(response => {
+      getList(this.filterForm).then(response => {
         this.list = response.data;
+        this.listTotal = response.data.length;
+        // 取前十条数据给到表格
+        this.showList = this.list.slice(0,10)
         this.listLoading = false;
       });
     }
   }
 };
 </script>
+
+<style lang="scss">
+.pagination {
+  margin-top: 12px;
+}
+</style>

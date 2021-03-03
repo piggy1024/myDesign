@@ -58,6 +58,17 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 分页 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="listTotal">
+      </el-pagination>
+    </div>
+
     <!-- 新增弹窗 -->
     <el-dialog title="新增账号" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -103,7 +114,9 @@ import {
 export default {
   data() {
     return {
+      listTotal: 0, // 列表总条数
       list: [],
+      showList: [],
       listLoading: false,
       dialogFormVisible: false,
       form: {
@@ -122,6 +135,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    changePage(page){
+      this.showList = this.list.slice(10*(page-1),10*page)
+    },
     // 重置密码
     resetPassword(id) {
       this.$confirm("此操作将重置该账号为默认密码, 是否继续?", "提示", {
@@ -192,7 +208,10 @@ export default {
     fetchData() {
       this.listLoading = true;
       getStudentsList().then(response => {
+        this.listTotal = response.data.length;
         this.list = response.data;
+        // 取前十条数据给到表格
+        this.showList = this.list.slice(0,10)
         // 强制页面重新更新数据
         this.$set(this.list);
         this.listLoading = false;
@@ -201,3 +220,4 @@ export default {
   }
 };
 </script>
+

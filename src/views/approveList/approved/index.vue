@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column label="申请联系人" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.app_id.app_phone }}</span>
+          <span>{{ scope.row.app_id.app_name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="最近一次审批时间" align="center">
@@ -67,10 +67,57 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
+          <el-button type="" @click="detail(scope.row)">详情</el-button>
           <el-button type="danger" @click="withdraw(scope.row.app_id._id)">撤回审批</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <!-- 分页 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="listTotal">
+      </el-pagination>
+    </div>
+
+    <!-- 详情对话框 -->
+    <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+      <div class="row-table">
+            <el-row type="flex">
+              <div class="label">申请内容</div>
+              <div class="value">{{ details.app_content }}</div>
+            </el-row>
+            <el-row>
+              <div class="label">申请主题</div>
+              <div class="value">{{ details.app_theme }}</div>
+            </el-row>
+            <el-row>
+              <div class="label">申请教室</div>
+              <div class="value">{{ details.app_type }}</div>
+            </el-row>
+            <el-row>
+              <div class="label">项目实际总耗费</div>
+              <div class="value">{{ details.projectPracticalTotalCost }}</div>
+            </el-row>
+            <el-row>
+              <div class="label">项目实际投资额</div>
+              <div class="value">{{ details.projectPracticalInvestment }}</div>
+            </el-row>
+            <el-row>
+              <div class="label">项目实际费用</div>
+              <div class="value">{{ details.projectPracticalCostTotalCost }}</div>
+            </el-row>
+            <el-row>
+
+            </el-row>
+            <el-row>
+
+            </el-row>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -83,20 +130,26 @@ export default {
   data() {
     return {
       apartment: store.getters.apartment,
-      obj: {
-        "部门": "department_status",
-        "教务处": "school_dean_status",
-        "后勤处": "logistics_status",
-        "教育技术中心": "technology_center_status"
-      },
+      listTotal: 0,
       list: [],
-      listLoading: false
+      showList: [],
+      listLoading: false,
+      dialogTableVisible: false,
+      details: {}
     }
   },
   created() {
     this.fetchData()
   },
   methods: {
+    changePage(page){
+      this.showList = this.list.slice(10*(page-1),10*page)
+    },
+    // 查看详情
+    detail(detail){
+      this.details = detail.app_id
+      this.dialogTableVisible = true
+    },
     // 撤回审批
     withdraw(id){
       this.$confirm("此操作将永久撤回该审批, 是否继续?", "提示", {
@@ -115,10 +168,6 @@ export default {
           });
         })
         .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消撤回"
-          });
         });
 
     },
@@ -126,16 +175,31 @@ export default {
     fetchData() {
       this.listLoading = true;
       getAuditedList({ apartment: store.getters.apartment }).then(response => {
+        this.listTotal = response.data.length;
         this.list = response.data;
          // 处理时间格式
         this.list.forEach(item => {
           item.app_id.app_passTime = formatDate(item.app_id.app_passTime)
           return item
         });
-        console.log(this.list);
+        // console.log(this.list);
+        // 取前十条数据给到表格
+        this.showList = this.list.slice(0,10)
         this.listLoading = false;
       });
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.row-table {
+  .el-row {
+   display: flex;
+  }
+  .label {
+    font-size: 18px;
+    color: aqua;
+  }
+}
+</style>

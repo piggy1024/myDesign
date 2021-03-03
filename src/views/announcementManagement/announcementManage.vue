@@ -5,7 +5,7 @@
     </div>
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="showList"
       element-loading-text="Loading"
       border
       fit
@@ -57,6 +57,15 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="listTotal">
+      </el-pagination>
+    </div>
     <!-- 新增弹窗 -->
     <el-dialog title="新增公告" :visible.sync="dialogFormVisible">
       <el-form :model="form">
@@ -94,7 +103,9 @@ import formatDate from '@/utils/formatDate'
 export default {
   data() {
     return {
+      listTotal: 0,
       list: [],
+      showList: [],
       listLoading: false,
       dialogFormVisible: false,
       form: {
@@ -114,6 +125,9 @@ export default {
     this.fetchData();
   },
   methods: {
+    changePage(page){
+      this.showList = this.list.slice(10*(page-1),10*page)
+    },
     // 编辑公告
     edit(id) {
       findAnnouncement({ id: id }).then(res => {
@@ -164,15 +178,18 @@ export default {
     fetchData() {
       this.listLoading = true;
       getAnnouncementsList().then(response => {
-        this.list = response.data
+        this.listTotal = response.data.length;
+        this.list = response.data;
         // 处理时间格式
         this.list.forEach(item => {
           item.publishTime = formatDate(item.publishTime)
           return item
         });
+        // 取前十条数据给到表格
+        this.showList = this.list.slice(0,10)
         // Object.assign(this.list,  response.data)
         // 强制页面重新更新数据
-        this.$set(this.list);
+        // this.$set(this.list);
         this.listLoading = false;
       });
     }

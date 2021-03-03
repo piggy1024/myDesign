@@ -23,17 +23,17 @@
           <span>{{ scope.row.app_id.app_name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="最近一次审批时间" width="200" align="center">
+      <el-table-column label="最近一次处理时间" width="200" align="center">
         <template slot-scope="scope">
           {{ scope.row.app_id.app_passTime }}
         </template>
       </el-table-column>
-      <el-table-column label="最近一次审批原因" align="center">
+      <el-table-column label="最近一次处理原因" align="center">
         <template slot-scope="scope">
           {{ scope.row.app_id.reason }}
         </template>
       </el-table-column>
-      <el-table-column label="审批状态" width="110" align="center">
+      <el-table-column label="处理状态" width="110" align="center">
         <template slot-scope="scope">
           <span v-if="scope.row.department_status === '0' && scope.row.logistics_status === '0' && scope.row.school_dean_status === '0' && scope.row.technology_center_status ==='0'">未审批</span>
           <span v-if="scope.row.department_status !== '0' && scope.row.logistics_status !== '0' && scope.row.school_dean_status !== '0' && scope.row.technology_center_status !=='0'">审批完成</span>
@@ -46,12 +46,31 @@
           <el-button @click="showDetail(scope.$index)">审批详情</el-button>
         </template>
       </el-table-column>
+      <el-table-column label="审批结果" align="center">
+        <template slot-scope="scope">
+          <span v-if="scope.row.app_id.status === 2">
+            已驳回
+          </span>
+          <span v-else>
+           {{ scope.row.app_id.status === 1 ? '已通过' : '审批中' }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="danger" @click="cancelApplication(scope.row.app_id._id)">取消申请</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="listTotal">
+      </el-pagination>
+    </div>
     <el-dialog title="审批详情" :visible.sync="dialogDetailVisible">
       <el-steps :active="detail.step" align-center>
             <el-step title="部门" :description="detail.department_reason"></el-step>
@@ -71,7 +90,9 @@ import formatDate from '@/utils/formatDate'
 export default {
   data() {
     return {
+      listTotal: 0,
       list: [],
+      showList: [],
       listLoading: false,
       dialogDetailVisible: false,
       detail: {
@@ -87,6 +108,9 @@ export default {
     this.fetchData()
   },
   methods: {
+    changePage(page){
+      this.showList = this.list.slice(10*(page-1),10*page)
+    },
     // 取消申请
     cancelApplication(id) {
       this.$confirm("此操作将永久取消申请, 是否继续?", "提示", {
@@ -133,6 +157,7 @@ export default {
     fetchData() {
       this.listLoading = true
       getApplyList({user_id: store.getters.user_id}).then(res => {
+        this.listTotal = res.data.length;
         this.list = res.data
         // 处理时间格式
         this.list.forEach(item => {
@@ -142,9 +167,17 @@ export default {
           }
           return item
         });
+        // 取前十条数据给到表格
+        this.showList = this.list.slice(0,10)
         this.listLoading = false
       })
     }
   }
 }
 </script>
+
+<style lang="scss">
+.pagination {
+  margin-top: 12px;
+}
+</style>

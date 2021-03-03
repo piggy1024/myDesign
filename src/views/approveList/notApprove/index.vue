@@ -60,6 +60,16 @@
         </template>
       </el-table-column>
     </el-table>
+    <!-- 分页 -->
+    <div class="pagination">
+      <el-pagination
+        background
+        @current-change="changePage"
+        layout="prev, pager, next"
+        :total="listTotal">
+      </el-pagination>
+    </div>
+
     <!-- 审批通过弹窗 -->
     <el-dialog title="审批通过" :visible.sync="dialogResolveFormVisible">
       <el-form :model="resolveForm">
@@ -97,7 +107,9 @@ export default {
   data() {
     return {
       checked: true,
+      listTotal: 0,
       list: [],
+      showList: [],
       listLoading: false,
       resolveForm: {
         _id: '',    // 审批的application的id
@@ -121,7 +133,9 @@ export default {
   },
   mounted() {},
   methods: {
-
+    changePage(page){
+      this.showList = this.list.slice(10*(page-1),10*page)
+    },
     // 确认通过
     resolveSubmit(){
       resolveApply(this.resolveForm).then(res=>{
@@ -154,6 +168,7 @@ export default {
     fetchData() {
       this.listLoading = true;
       getAuditList({ apartment: store.getters.apartment }).then(res => {
+        this.listTotal = res.data.length;
         this.list = res.data;
         // 处理时间格式
         this.list.forEach(item => {
@@ -162,6 +177,8 @@ export default {
           return item
         });
         // console.log(res.data);
+        // 取前十条数据给到表格
+        this.showList = this.list.slice(0,10)
         this.listLoading = false;
       });
     }
