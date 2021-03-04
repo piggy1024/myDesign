@@ -167,7 +167,7 @@ export const constantRoutes = [{
       name: 'Form',
       component: () => import('@/views/form/index'),
       meta: {
-        title: 'Form',
+        title: '宣传品挂贴申请',
         icon: 'form'
       }
     }]
@@ -243,12 +243,41 @@ export const constantRoutes = [{
       }
     ]
   },
+  // 宣传品张贴审核情况
+  {
+    path: '/approvePostList',
+    component: Layout,
+    redirect: '/approvePostList/notApprove',
+    name: 'ApprovePostList',
+    meta: {
+      title: '宣传品张贴审核情况',
+      icon: 'nested',
+      roles: ['admin']
+    },
+    children: [{
+        path: 'approved',
+        component: () => import('@/views/approvePostList/approved/index'),
+        name: 'Approved',
+        meta: {
+          title: '已审核列表'
+        }
+      },
+      {
+        path: 'notApprove',
+        component: () => import('@/views/approvePostList/notApprove/index'),
+        name: 'NotApprove',
+        meta: {
+          title: '未审核列表'
+        },
+      }
+    ]
+  },
   // 我的申请进度
   {
     path: '/applicationProgress',
     component: Layout,
     meta: {
-      roles: ['editor', ]
+      roles: ['editor']
     },
     children: [{
       path: 'index',
@@ -256,6 +285,23 @@ export const constantRoutes = [{
       component: () => import('@/views/applicationProgress/index'),
       meta: {
         title: '我的申请进度',
+        icon: 'form'
+      }
+    }]
+  },
+  // 我的宣传品张贴申请进度
+  {
+    path: '/applicationPostProgress',
+    component: Layout,
+    meta: {
+      roles: ['editor']
+    },
+    children: [{
+      path: 'index',
+      name: 'Form',
+      component: () => import('@/views/applicationPostProgress/index'),
+      meta: {
+        title: '我的宣传品张贴申请进度',
         icon: 'form'
       }
     }]
