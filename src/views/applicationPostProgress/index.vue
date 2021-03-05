@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="showList"
       element-loading-text="Loading"
       border
       fit
@@ -35,9 +35,12 @@
       </el-table-column>
       <el-table-column label="处理状态" width="110" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.department_status === '0' && scope.row.logistics_status === '0' && scope.row.school_dean_status === '0' && scope.row.technology_center_status ==='0'">未审批</span>
-          <span v-if="scope.row.department_status !== '0' && scope.row.logistics_status !== '0' && scope.row.school_dean_status !== '0' && scope.row.technology_center_status !=='0'">审批完成</span>
-          <span v-else><span v-if="scope.row.department_status !== '0' || scope.row.logistics_status !== '0' || scope.row.school_dean_status !== '0' || scope.row.technology_center_status !=='0'">审批中</span>
+          <span v-if="scope.row.app_id.status === 2">审批完成</span>
+          <span v-else>
+            <span v-if="scope.row.department_status === '0' && scope.row.propagandaDepartment_status === '0'">未审批</span>
+            <span v-if="scope.row.department_status !== '0' && scope.row.propagandaDepartment_status !== '0'">审批完成</span>
+            <span v-else><span v-if="scope.row.department_status !== '0' || scope.row.propagandaDepartment_status !== '0'">审批中</span>
+          </span>
           </span>
         </template>
       </el-table-column>
@@ -74,9 +77,7 @@
     <el-dialog title="审批详情" :visible.sync="dialogDetailVisible">
       <el-steps :active="detail.step" align-center>
             <el-step title="部门" :description="detail.department_reason"></el-step>
-            <el-step title="后勤处" :description="detail.logistics_reason"></el-step>
-            <el-step title="教务处中心" :description="detail.school_dean_reason"></el-step>
-            <el-step title="教育技术中心理由" :description="detail.technology_center_reason"></el-step>
+            <el-step title="宣传部" :description="detail.propagandaDepartment_reason"></el-step>
         </el-steps>
     </el-dialog>
   </div>
@@ -98,14 +99,12 @@ export default {
       detail: {
         step: 0,
         department_reason: '',
-        logistics_reason: '',
-        school_dean_reason: '',
-        technology_center_reason: ''
+        propagandaDepartment_reason: ''
       }
     }
   },
   created() {
-    // this.fetchData()
+    this.fetchData()
   },
   methods: {
     changePage(page){
@@ -141,14 +140,8 @@ export default {
       if(this.detail.department_status !== '0') {
         this.detail.step = 1
       }
-      if(this.detail.logistics_status !== '0') {
+      if(this.detail.propagandaDepartment_status !== '0') {
         this.detail.step = 2
-      }
-      if(this.detail.school_dean_status !== '0') {
-        this.detail.step = 3
-      }
-      if(this.detail.technology_center_status !== '0') {
-        this.detail.step = 4
       }
       // this.detail = this.list[index];
       // this.detail.step = 1;
@@ -158,7 +151,7 @@ export default {
       this.listLoading = true
       getApplyPostList({user_id: store.getters.user_id}).then(res => {
         this.listTotal = res.data.length;
-        this.list = res.data
+        this.list = res.data;
         // 处理时间格式
         this.list.forEach(item => {
           // 如果有审批时间,转化审批时间格式

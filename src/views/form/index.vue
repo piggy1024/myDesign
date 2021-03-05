@@ -1,17 +1,6 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="图标">
-        <el-upload
-          class="avatar-uploader"
-          :action="'http://localhost:3000/uploads'"
-          :show-file-list="false"
-          :on-success="afterUpload"
-        >
-          <img v-if="form.icon" :src="form.icon" class="avatar">
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-        </el-upload>
-      </el-form-item>
       <el-form-item label="活动主题及内容" prop="app_theme">
           <el-input v-model="form.app_theme" type="text" placeholder="请输入" />
         </el-form-item>
@@ -61,7 +50,18 @@
             </el-radio-group>
           </template>
         </el-form-item>
-        <el-form-item label="主题内容" prop="app_content">
+        <el-form-item label="宣传品图片" v-if="form.app_post_type !=='' && form.app_post_type !=='横幅'">
+          <el-upload
+            class="avatar-uploader"
+            :action="'http://localhost:3000/uploads'"
+            :show-file-list="false"
+            :on-success="afterUpload"
+          >
+            <img v-if="form.app_content" :src="form.app_content" width="300px" height="150px" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="横幅内容" prop="app_content" v-if="form.app_post_type === '横幅'">
           <el-input
             v-model="form.app_content"
             type="textarea"
@@ -72,9 +72,7 @@
     <div>
       <el-button @click="onSubmit">提交申请</el-button>
     </div>
-    <!-- <div>
-      <img src="http://localhost:3000/uploads/b1b394c64ecd3a0265d2e07d26f1629c" alt="">
-    </div> -->
+
   </div>
 </template>
 
@@ -108,8 +106,8 @@ export default {
   methods: {
     afterUpload(res) {
       // 明确告诉vue赋值 form.icon = res.url
-      this.$set(this.form, 'icon', res.url)
-      this.form.icon = res.url
+      this.$set(this.form, 'app_content', res.url)
+      this.form.app_content = res.url
     },
     onSubmit() {
       this.$confirm("提起宣传品张贴申请, 是否继续?", "提示", {

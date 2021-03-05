@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-table
       v-loading="listLoading"
-      :data="list"
+      :data="showList"
       element-loading-text="Loading"
       border
       fit
@@ -35,9 +35,14 @@
       </el-table-column>
       <el-table-column label="处理状态" width="110" align="center">
         <template slot-scope="scope">
-          <span v-if="scope.row.department_status === '0' && scope.row.logistics_status === '0' && scope.row.school_dean_status === '0' && scope.row.technology_center_status ==='0'">未审批</span>
-          <span v-if="scope.row.department_status !== '0' && scope.row.logistics_status !== '0' && scope.row.school_dean_status !== '0' && scope.row.technology_center_status !=='0'">审批完成</span>
-          <span v-else><span v-if="scope.row.department_status !== '0' || scope.row.logistics_status !== '0' || scope.row.school_dean_status !== '0' || scope.row.technology_center_status !=='0'">审批中</span>
+          <span v-if="scope.row.app_id.status === 2">
+            审批完成
+          </span>
+          <span v-else>
+            <span v-if="scope.row.department_status === '0' && scope.row.logistics_status === '0' && scope.row.school_dean_status === '0' && scope.row.technology_center_status ==='0'">未审批</span>
+            <span v-if="scope.row.department_status !== '0' && scope.row.logistics_status !== '0' && scope.row.school_dean_status !== '0' && scope.row.technology_center_status !=='0'">审批完成</span>
+            <span v-else><span v-if="scope.row.department_status !== '0' || scope.row.logistics_status !== '0' || scope.row.school_dean_status !== '0' || scope.row.technology_center_status !=='0'">审批中</span>
+            </span>
           </span>
         </template>
       </el-table-column>

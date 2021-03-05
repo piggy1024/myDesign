@@ -43,6 +43,16 @@
           {{ scope.row.app_id.app_type }}
         </template>
       </el-table-column>
+      <el-table-column label="宣传品类型" width="110" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.app_id.app_post_type }}
+        </template>
+      </el-table-column>
+      <el-table-column label="宣传品内容" width="110" align="center">
+        <template slot-scope="scope">
+          <el-button type="" @click="detail(scope.row)">详情</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="success" @click="onSuccess(scope.row.app_id._id)">审批通过</el-button>
@@ -59,6 +69,23 @@
         :total="listTotal">
       </el-pagination>
     </div>
+
+    <!-- 详情对话框 -->
+    <el-dialog title="宣传品内容" :visible.sync="dialogTableVisible">
+      <div class="row-table">
+            <el-row type="flex" v-if="details.app_post_type === '横幅'">
+              <div class="label">申请内容</div>
+              <div class="value">{{ details.app_content }}</div>
+            </el-row>
+            <el-row v-else>
+              <div class="label">
+                <div style="height: 100px;width: 100px">
+                  <img :src="details.app_content" width="200px" height="120px" alt="">
+                </div>
+              </div>
+            </el-row>
+      </div>
+    </el-dialog>
 
     <!-- 审批通过弹窗 -->
     <el-dialog title="审批通过" :visible.sync="dialogResolveFormVisible">
@@ -115,7 +142,8 @@ export default {
         apartment: store.getters.apartment
       },
       dialogRejectFormVisible: false,
-
+      dialogTableVisible: false,
+      details: {}
     };
   },
   created() {
@@ -125,6 +153,11 @@ export default {
   methods: {
     changePage(page){
       this.showList = this.list.slice(10*(page-1),10*page)
+    },
+    // 查看详情
+    detail(detail){
+      this.details = detail.app_id
+      this.dialogTableVisible = true
     },
     // 确认通过
     resolveSubmit(){
