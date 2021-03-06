@@ -10,7 +10,7 @@
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ (filterForm.pageNo-1)*10 + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="申请单位">
@@ -135,7 +135,12 @@ export default {
       showList: [],
       listLoading: false,
       dialogTableVisible: false,
-      details: {}
+      details: {},
+      filterForm: {
+        size: '',
+        pageNo: 1,
+        pageSize: 10,
+      }
     }
   },
   created() {
@@ -143,6 +148,7 @@ export default {
   },
   methods: {
     changePage(page){
+      this.filterForm.pageNo = page
       this.showList = this.list.slice(10*(page-1),10*page)
     },
     // 查看详情

@@ -8,6 +8,23 @@ export function getApplyList(params) {
     params
   })
 }
+// 添加申请
+export function addApplication(params) {
+  return request({
+    url: '/applications/add',
+    method: 'post',
+    params
+  })
+}
+
+// 修改申请
+export function editApplication(params) {
+  return request({
+    url: '/applications/edit',
+    method: 'post',
+    params
+  })
+}
 
 // 取消申请
 export function deleteApply(params) {

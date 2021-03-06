@@ -18,6 +18,7 @@
             <el-date-picker
               v-model="form.app_start_time"
               type="datetime"
+              :picker-options="pickerOptions"
               placeholder="开始时间"
               style="width: 100%;"
             />
@@ -27,6 +28,7 @@
             <el-date-picker
               v-model="form.app_end_time"
               type="datetime"
+              :picker-options="pickerOptions"
               placeholder="结束时间"
               style="width: 100%;"
             />
@@ -58,7 +60,7 @@
             :on-success="afterUpload"
           >
             <img v-if="form.app_content" :src="form.app_content" width="300px" height="150px" class="avatar">
-            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+            <i v-else class="el-icon-plus avatar-uploader-icon">上传</i>
           </el-upload>
         </el-form-item>
         <el-form-item label="横幅内容" prop="app_content" v-if="form.app_post_type === '横幅'">
@@ -84,7 +86,6 @@ export default {
   data() {
     return {
       form: {
-        icon: '',
         c_id: "",
         app_theme: "",
         stu_id: store.getters.user_id,  // 当前申请人的学号或者工号
@@ -97,15 +98,18 @@ export default {
         app_start_time: "",
         app_end_time: "",
         app_content: "",
-        app_passTime: "",
-        status: 0
+        app_passTime: ""
       },
-      imgs: []
+      imgs: [],
+      pickerOptions: {
+        disabledDate(time) {
+            return time.getTime() < Date.now() - 3600 * 1000 * 24;
+        }
+      }
     };
   },
   methods: {
     afterUpload(res) {
-      // 明确告诉vue赋值 form.icon = res.url
       this.$set(this.form, 'app_content', res.url)
       this.form.app_content = res.url
     },

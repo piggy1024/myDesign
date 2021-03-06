@@ -11,7 +11,7 @@
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ (filterForm.pageNo-1)*10 + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="名字">
@@ -128,7 +128,12 @@ export default {
         stu_phone: "",
         stu_email: ""
       },
-      formLabelWidth: "120px"
+      formLabelWidth: "120px",
+      filterForm: {
+        size: '',
+        pageNo: 1,
+        pageSize: 10,
+      }
     };
   },
   created() {
@@ -136,6 +141,7 @@ export default {
   },
   methods: {
     changePage(page){
+      this.filterForm.pageNo = page
       this.showList = this.list.slice(10*(page-1),10*page)
     },
     // 重置密码

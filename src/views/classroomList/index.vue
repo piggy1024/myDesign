@@ -10,7 +10,11 @@
           <el-input style="width: 300px" v-model="filterForm.building" placeholder="所属楼" />
         </el-form-item>
         <el-form-item prop="isMultimedia">
-          <el-input style="width: 300px" v-model="filterForm.isMultimedia" placeholder="是否多媒体教室" />
+          <el-select v-model="filterForm.isMultimedia" placeholder="教室类型">
+            <el-option label="多媒体教室" :value="true" />
+            <el-option label="非多媒体教室" :value="false" />
+          </el-select>
+          <!-- <el-input style="width: 300px" v-model="filterForm.isMultimedia" placeholder="是否多媒体教室" /> -->
         </el-form-item>
         <el-form-item prop="size">
           <el-input style="width: 300px" v-model="filterForm.size" placeholder="教室规模" />
@@ -31,7 +35,7 @@
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ (filterForm.pageNo-1)*10 + scope.$index + 1 }}
         </template>
       </el-table-column>
       <el-table-column label="教室名称" align="center">
@@ -108,6 +112,7 @@
             <el-date-picker
               v-model="form.app_start_time"
               type="datetime"
+              :picker-options="pickerOptions"
               placeholder="开始时间"
               style="width: 100%;"
             />
@@ -117,6 +122,7 @@
             <el-date-picker
               v-model="form.app_end_time"
               type="datetime"
+              :picker-options="pickerOptions"
               placeholder="结束时间"
               style="width: 100%;"
             />
@@ -138,10 +144,6 @@
             placeholder="请输入"
           />
         </el-form-item>
-        <!-- <el-form-item>
-          <el-button type="primary" @click="onSubmit">Create</el-button>
-          <el-button @click="onCancel('form')">Cancel</el-button>
-        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="onCancel('form')">取 消</el-button>
@@ -152,14 +154,12 @@
 </template>
 
 <script>
-import { getList } from "@/api/table";
-import applicationForm from "@/views/form/index";
-import { addApplication } from "../../api/submit";
+import { getList } from "@/api/classroom";
+import { addApplication } from "@/api/application";
 import { mapGetters } from 'vuex'
 import store from '@/store'
 
 export default {
-  components: { applicationForm },
   computed: {
     ...mapGetters([
       'name',
@@ -174,7 +174,7 @@ export default {
         isMultimedia: '',
         size: '',
         pageNo: 1,
-        pageSize: 2,
+        pageSize: 10,
       },
       listTotal: 0, // 列表总条数
       list: [],
@@ -196,6 +196,11 @@ export default {
         app_content: "",
         app_passTime: "",
         status: 0
+      },
+      pickerOptions: {
+          disabledDate(time) {
+              return time.getTime() < Date.now() - 3600 * 1000 * 24;
+          }
       }
     };
   },
@@ -205,6 +210,7 @@ export default {
   methods: {
     // 改变页码
     changePage(page){
+      this.filterForm.pageNo = page
       this.showList = this.list.slice(10*(page-1),10*page)
     },
     // 查询
@@ -240,14 +246,6 @@ export default {
       this.$refs[formName].resetFields();
       this.dialogFormVisible = false;
     },
-    onSubmit(formName) {
-      addApplication(this.form).then(res => {
-        console.log(res);
-      });
-      this.$message("submit!");
-      this.$refs[formName].resetFields();
-    },
-
     // 获取列表数据
     fetchData() {
       this.listLoading = true;

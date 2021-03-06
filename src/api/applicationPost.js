@@ -1,8 +1,18 @@
 import request from '@/utils/request'
 
+// 增加申请
 export function addPostApplication(params) {
   return request({
     url: '/applicationsPost/addPost',
+    method: 'post',
+    params
+  })
+}
+
+// 修改申请
+export function editPostApplication(params) {
+  return request({
+    url: '/applicationsPost/editPost',
     method: 'post',
     params
   })
