@@ -22,17 +22,23 @@
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" round @click="handleQuery">查询</el-button>
           <el-button type="primary" icon="el-icon-refresh" round plain @click="handleReset('filterForm')">重置</el-button>
+          <el-button type="success" icon="el-icon-refresh" round @click="mutiApply">多选申请</el-button>
         </el-form-item>
       </el-form>
     </div>
     <el-table
       v-loading="listLoading"
       :data="showList"
+      @selection-change="handleSelectionChange"
       element-loading-text="Loading"
       border
       fit
       highlight-current-row
     >
+      <el-table-column
+        type="selection"
+        width="55">
+      </el-table-column>
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
           {{ (filterForm.pageNo-1)*10 + scope.$index + 1 }}
@@ -195,7 +201,8 @@ export default {
         app_end_time: "",
         app_content: "",
         app_passTime: "",
-        status: 0
+        status: 0,
+        addList: []
       },
       pickerOptions: {
           disabledDate(time) {
@@ -208,6 +215,19 @@ export default {
     this.fetchData();
   },
   methods: {
+    mutiApply () {
+      this.dialogFormVisible = true;
+      // 清空表单数据
+      // this.form = this.$options.data().form;
+    },
+    // 多选
+    handleSelectionChange (res) {
+      this.form.addList = []
+      res.forEach(item => {
+        this.form.addList.push(item._id)
+      })
+      console.log(this.form.addList)
+    },
     // 改变页码
     changePage(page){
       this.filterForm.pageNo = page
@@ -227,17 +247,25 @@ export default {
     // 申请使用
     apply(id) {
       this.dialogFormVisible = true;
+      // 清空表单数据
+      this.form = this.$options.data().form;
       // 将教室的c_id 放进要提交表单
       this.form.c_id = id;
+      this.form.addList.push(id)
     },
     // 确定申请
     addSubmit(formName) {
       addApplication(this.form).then(res => {
         // 清空原来表单数据
+        this.form = this.$options.data().form;
         this.$message({
             type: "success",
             message: "申请成功!"
           });
+        this.$router.push('/applicationProgress/index')
+      }).catch(err => {
+        // console.log(err)
+        this.$router.push('/applicationProgress/index')
       });
       // 关闭弹框
       this.dialogFormVisible = false;
