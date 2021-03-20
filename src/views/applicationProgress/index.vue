@@ -46,9 +46,14 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="详情" align="center">
+      <el-table-column label="审批详情" align="center">
         <template slot-scope="scope">
           <el-button @click="showDetail(scope.$index)">审批详情</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="教室详情" align="center">
+        <template slot-scope="scope">
+          <el-button @click="showClassroomDetail(scope.row)">教室详情</el-button>
         </template>
       </el-table-column>
       <el-table-column label="审批结果" align="center">
@@ -80,11 +85,18 @@
     <!-- 审批详情 -->
     <el-dialog title="审批详情" :visible.sync="dialogDetailVisible">
       <el-steps :active="detail.step" align-center>
-            <el-step title="部门" :description="detail.department_reason"></el-step>
-            <el-step title="后勤处" :description="detail.logistics_reason"></el-step>
-            <el-step title="教务处中心" :description="detail.school_dean_reason"></el-step>
-            <el-step title="教育技术中心理由" :description="detail.technology_center_reason"></el-step>
-        </el-steps>
+          <el-step title="部门" :description="detail.department_reason"></el-step>
+          <el-step title="后勤处" :description="detail.logistics_reason"></el-step>
+          <el-step title="教务处中心" :description="detail.school_dean_reason"></el-step>
+          <el-step title="教育技术中心理由" :description="detail.technology_center_reason"></el-step>
+      </el-steps>
+    </el-dialog>
+    <!-- 教室详情 -->
+    <el-dialog title="教室详情" :visible.sync="dialogDetailVisibleClassroom">
+      教室名称: {{detailClassroom.classroomName}}
+      教室所属楼: {{detailClassroom.building}}
+      多媒体类型: {{detailClassroom.isMultimedia}}
+      教室规模: {{detailClassroom.size}}
     </el-dialog>
     <el-dialog title="申请使用" :visible.sync="dialogFormVisible">
       <el-form ref="form" :model="form" label-width="120px">
@@ -167,6 +179,7 @@
 
 <script>
 import { getApplyList, editApplication , deleteApply } from '@/api/application'
+import { getClassroomDetail } from '@/api/classroom'
 import store from '@/store'
 import formatDate from '@/utils/formatDate'
 
@@ -178,7 +191,14 @@ export default {
       showList: [],
       listLoading: false,
       dialogDetailVisible: false,
+      dialogDetailVisibleClassroom: false,
       dialogFormVisible: false,
+      detailClassroom: {
+        classroomName: '',
+        building: '',
+        isMultimedia: '',
+        size: ''
+      },
       detail: {
         step: 0,
         department_reason: '',
@@ -227,7 +247,6 @@ export default {
       this.dialogFormVisible = false;
     },
     onSubmit(formName) {
-      console.log(this.form);
       editApplication(this.form).then(res => {
         this.$message.success("修改成功!");
       });
@@ -256,6 +275,16 @@ export default {
         })
         .catch(() => {
         });
+    },
+    // 显示教室详情
+    showClassroomDetail (row) {
+      // 每次点击展示详情先初始化detail数据
+      Object.assign(this.$data.detailClassroom, this.$options.data().detailClassroom);
+      getClassroomDetail({ c_id: row.app_id.c_id }).then(res => {
+        this.dialogDetailVisibleClassroom = true
+        Object.assign(this.detailClassroom, res.data)
+        // console.log(res);
+      })
     },
     // 显示审批详情
     showDetail(index){
