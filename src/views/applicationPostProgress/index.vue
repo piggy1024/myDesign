@@ -196,7 +196,8 @@ export default {
         app_size: "",
         app_start_time: "",
         app_end_time: "",
-        app_content: ""
+        app_content: "",
+        app_passTime: ""
       },
       dialogFormVisible: false,
       pickerOptions: {
@@ -224,7 +225,6 @@ export default {
       this.dialogFormVisible = false;
     },
     onSubmit(formName) {
-      console.log(this.form);
       editPostApplication(this.form).then(res => {
         this.$message.success("修改成功!");
       });
