@@ -15,3 +15,11 @@ export function getClassroomList(params) {
     params
   })
 }
+
+export function getClassroomDetail(params) {
+  return request({
+    url: '/classrooms/detailClassroom',
+    method: 'get',
+    params
+  })
+}
