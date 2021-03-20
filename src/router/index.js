@@ -47,7 +47,7 @@ export const constantRoutes = [{
     component: Layout,
     redirect: '/dashboard',
     meta: {
-      roles: ['editor', 'admin']
+      roles: ['editor', 'admin', 'superAdmin']
     },
     children: [{
       path: 'dashboard',
@@ -64,7 +64,7 @@ export const constantRoutes = [{
     path: '/personnel',
     component: Layout,
     meta: {
-      roles: ['editor', 'admin']
+      roles: ['editor', 'admin', 'superAdmin']
     },
     children: [{
       path: 'index',
@@ -86,7 +86,7 @@ export const constantRoutes = [{
     meta: {
       title: '公告管理',
       icon: 'nested',
-      roles: ['admin']
+      roles: ['admin', 'superAdmin']
     },
     children: [{
         path: 'announcementManage',
@@ -159,7 +159,7 @@ export const constantRoutes = [{
   {
     path: '/form',
     meta: {
-      roles: ['editor', 'admin']
+      roles: ['editor']
     },
     component: Layout,
     children: [{
@@ -315,7 +315,7 @@ export const constantRoutes = [{
     meta: {
       title: '账号管理',
       icon: 'nested',
-      roles: ['admin']
+      roles: ['superAdmin']
     },
     children: [{
         path: 'adminManage',

@@ -116,6 +116,10 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          if(this.loginForm.username === "superadmin") {
+            // console.log('.....---');
+            this.loginForm.identity = 'superAdmin'
+          }
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
