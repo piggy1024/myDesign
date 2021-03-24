@@ -36,3 +36,12 @@ export function deleteAnnouncement(params) {
     params
   })
 }
+
+// 查找最新一条公告
+export function findNewAnnouncement(params) {
+  return request({
+    url: '/announcements/newAnnouncement',
+    method: 'get',
+    params
+  })
+}

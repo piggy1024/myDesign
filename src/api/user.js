@@ -32,3 +32,12 @@ export function logout() {
     method: 'post'
   })
 }
+
+// 查询用户申请相关数据
+export function getUserApplyData(params) {
+  return request({
+    url: '/applications/userApplyData',
+    method: 'get',
+    params: params
+  })
+}

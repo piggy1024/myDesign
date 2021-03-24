@@ -8,6 +8,15 @@ export function getStudentsList(params) {
   })
 }
 
+// 利用stu_number获取学生信息
+export function getStudentInfo(params) {
+  return request({
+    url: '/students/getStudentInfo',
+    method: 'post',
+    params
+  })
+}
+
 // 查找账号
 export function findStudent(params) {
   return request({
@@ -17,7 +26,7 @@ export function findStudent(params) {
   })
 }
 
-// 新增管理员账号
+// 新增学生账号
 export function addStudent(params) {
   return request({
     url: '/students/addAccount',
