@@ -95,26 +95,16 @@
               <div class="value">{{ details.app_theme }}</div>
             </el-row>
             <el-row>
-              <div class="label">申请教室</div>
+              <div class="label">活动类型</div>
               <div class="value">{{ details.app_type }}</div>
             </el-row>
             <el-row>
-              <div class="label">项目实际总耗费</div>
-              <div class="value">{{ details.projectPracticalTotalCost }}</div>
+              <div class="label">活动开始时间</div>
+              <div class="value">{{ details.app_start_time }}</div>
             </el-row>
             <el-row>
-              <div class="label">项目实际投资额</div>
-              <div class="value">{{ details.projectPracticalInvestment }}</div>
-            </el-row>
-            <el-row>
-              <div class="label">项目实际费用</div>
-              <div class="value">{{ details.projectPracticalCostTotalCost }}</div>
-            </el-row>
-            <el-row>
-
-            </el-row>
-            <el-row>
-
+              <div class="label">活动结束时间</div>
+              <div class="value">{{ details.app_end_time }}</div>
             </el-row>
       </div>
     </el-dialog>
@@ -197,10 +187,28 @@ export default {
 .row-table {
   .el-row {
    display: flex;
+   justify-content: center;
+   margin-top: 24px;
+  }
+  .label,
+  .value {
+    border: 1px solid aqua;
+    border-radius: 16px;
+    padding: 8px;
+    font-size: 18px;
+    background: rgb(47, 218, 204);
+    color: #fff;
   }
   .label {
-    font-size: 18px;
-    color: aqua;
+    margin-right: 48px;
+    width: 150px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .value {
+    width: 200px;
   }
 }
 </style>

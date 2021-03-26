@@ -84,37 +84,31 @@
     </div>
 
     <!-- 详情对话框 -->
-    <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+    <el-dialog title="申请详情" :visible.sync="dialogTableVisible" width="600px">
       <div class="row-table">
-            <el-row type="flex">
-              <div class="label">申请内容</div>
-              <div class="value">{{ details.app_content }}</div>
-            </el-row>
             <el-row>
               <div class="label">申请主题</div>
               <div class="value">{{ details.app_theme }}</div>
             </el-row>
             <el-row>
-              <div class="label">申请教室</div>
+              <div class="label">申请活动类型</div>
               <div class="value">{{ details.app_type }}</div>
             </el-row>
             <el-row>
-              <div class="label">项目实际总耗费</div>
-              <div class="value">{{ details.projectPracticalTotalCost }}</div>
+              <div class="label">申请教室类型</div>
+              <div class="value">{{ details.app_roomType ? '多媒体教室' : '普通教室' }}</div>
             </el-row>
             <el-row>
-              <div class="label">项目实际投资额</div>
-              <div class="value">{{ details.projectPracticalInvestment }}</div>
+              <div class="label">活动开始时间</div>
+              <div class="value">{{ details.app_start_time }}</div>
             </el-row>
             <el-row>
-              <div class="label">项目实际费用</div>
-              <div class="value">{{ details.projectPracticalCostTotalCost }}</div>
+              <div class="label">活动结束时间</div>
+              <div class="value">{{ details.app_end_time }}</div>
             </el-row>
             <el-row>
-
-            </el-row>
-            <el-row>
-
+              <div class="label">活动内容</div>
+              <div class="value">{{ details.app_content }}</div>
             </el-row>
       </div>
     </el-dialog>
@@ -202,10 +196,28 @@ export default {
 .row-table {
   .el-row {
    display: flex;
+   justify-content: center;
+   margin-top: 24px;
+  }
+  .label,
+  .value {
+    border: 1px solid aqua;
+    border-radius: 16px;
+    padding: 8px;
+    font-size: 18px;
+    background: rgb(47, 218, 204);
+    color: #fff;
   }
   .label {
-    font-size: 18px;
-    color: aqua;
+    margin-right: 48px;
+    width: 150px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .value {
+    width: 200px;
   }
 }
 </style>

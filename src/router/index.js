@@ -89,22 +89,13 @@ export const constantRoutes = [{
       roles: ['admin', 'superAdmin']
     },
     children: [{
-        path: 'announcementManage',
-        component: () => import('@/views/announcementManagement/announcementManage'), // Parent router-view
-        name: 'announcementManage',
-        meta: {
-          title: '公告列表'
-        },
+      path: 'announcementManage',
+      component: () => import('@/views/announcementManagement/announcementManage'), // Parent router-view
+      name: 'announcementManage',
+      meta: {
+        title: '公告管理'
       },
-      {
-        path: 'studentManage',
-        component: () => import('@/views/accountManagement/studentManage'),
-        name: 'StudentManage',
-        meta: {
-          title: '学生账号管理'
-        }
-      }
-    ]
+    }]
   },
 
   // 公告列表路由
@@ -112,7 +103,7 @@ export const constantRoutes = [{
     path: '/announcement',
     component: Layout,
     meta: {
-      roles: ['editor', 'admin']
+      roles: ['editor']
     },
     children: [{
       path: 'index',
@@ -136,24 +127,14 @@ export const constantRoutes = [{
       roles: ['editor', 'admin']
     },
     children: [{
-        path: 'classroomList',
-        name: 'ClassroomList',
-        component: () => import('@/views/classroomList/index'),
-        meta: {
-          title: '教室列表',
-          icon: 'table'
-        }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: {
-          title: 'Tree',
-          icon: 'tree'
-        }
+      path: 'classroomList',
+      name: 'ClassroomList',
+      component: () => import('@/views/classroomList/index'),
+      meta: {
+        title: '教室列表',
+        icon: 'table'
       }
-    ]
+    }]
   },
   // 表单
   {

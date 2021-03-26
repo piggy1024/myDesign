@@ -163,10 +163,9 @@ export default {
       addAnnouncement(this.form).then(res => {
         // console.log(res);
         // 新增后重新刷新列表数据
-        this.fetchData();
         this.dialogFormVisible = false;
       });
-
+      this.fetchData();
     },
     // 新增公告
     addAnnouncement() {

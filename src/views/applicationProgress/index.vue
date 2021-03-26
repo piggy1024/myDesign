@@ -68,7 +68,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
-          <el-button type="info" @click="edit(scope.row.app_id)">编辑</el-button>
+          <el-button type="info" @click="edit(scope.row.app_id)" v-if="scope.row.app_id.status === 0">编辑</el-button>
           <el-button type="danger" @click="cancelApplication(scope.row.app_id._id)">取消申请</el-button>
         </template>
       </el-table-column>

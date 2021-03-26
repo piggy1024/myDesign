@@ -163,6 +163,7 @@ export default {
     resolveSubmit(){
       resolvePostApply(this.resolveForm).then(res=>{
         // console.log(res);
+        this.$message.success('操作成功!')
       })
       this.dialogResolveFormVisible = false
       this.fetchData();
