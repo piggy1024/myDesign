@@ -18,6 +18,15 @@ export function findAdmin(params) {
   })
 }
 
+// 通过账号查找账号
+export function findAdminByAccount(params) {
+  return request({
+    url: '/admins/findByAccount',
+    method: 'post',
+    params
+  })
+}
+
 // 新增管理员账号
 export function addAdmin(params) {
   return request({

@@ -3,20 +3,20 @@
         <div class="personApplyCondition">
             <div class="detail">
                 <el-row class="title">用户当前总申请数</el-row>
-                <el-row class="value">{{ userApplyData.userApplyCount }}</el-row>
+                <el-row class="value">{{ userApplyData.userApplyCount ? userApplyData.userApplyCount : '--' }}</el-row>
             </div>
             <div class="detail">
                 <el-row class="title">用户当前生效申请个数</el-row>
-                <el-row class="value">{{ userApplyData.userActiveCount }}</el-row>
+                <el-row class="value">{{ userApplyData.userActiveCount ? userApplyData.userActiveCount : '--' }}</el-row>
             </div>
             <div class="detail">
                 <el-row class="title">用户当前处于申请中的个数</el-row>
-                <el-row class="value">{{ userApplyData.userApplyingCount }}</el-row>
+                <el-row class="value">{{ userApplyData.userApplyingCount ? userApplyData.userApplyingCount : '--' }}</el-row>
             </div>
         </div>
         <div class="personContainer">
             <!-- <el-row>1</el-row> -->
-            <el-row>
+            <el-row v-if="$store.getters.roles[0] === 'editor'">
                 <el-form ref="form" :model="form" label-width="80px">
                     <el-form-item label="姓名">
                         <el-input v-model="form.stu_name" :disabled="isEdit"></el-input>
@@ -42,6 +42,29 @@
                     </el-form-item>
                 </el-form>
             </el-row>
+            <el-row v-if="$store.getters.roles[0] === 'admin'">
+                <el-form ref="form1" :model="form1" label-width="80px">
+                    <el-form-item label="姓名">
+                        <el-input v-model="form1.admin_name" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="所在单位">
+                        <el-input v-model="form1.apartment" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="联系方式">
+                        <el-input v-model="form1.admin_phone" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="邮箱">
+                        <el-input v-model="form1.admin_email" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码">
+                        <el-input v-model="form1.admin_password" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">编辑</el-button>
+                        <el-button @click="confirm" :disabled="isEdit">确认</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-row>
             <!-- <el-row>3</el-row> -->
         </div>
     </div>
@@ -50,6 +73,7 @@
 <script>
 import store from '@/store'
 import { getStudentInfo, addStudent } from '@/api/student'
+import { findAdminByAccount, addAdmin } from '@/api/admin'
 import { getUserApplyData } from '@/api/user'
 export default {
     data() {
@@ -62,6 +86,14 @@ export default {
                 stu_email: '',
                 stu_phone: '',
                 stu_sex: ''
+            },
+            form1: {
+                _id: '',
+                admin_name: '',
+                apartment: '',
+                admin_phone: '',
+                admin_email: '',
+                admin_password: ''
             },
             isEdit: true,
             userApplyData: {
@@ -78,9 +110,16 @@ export default {
     methods: {
         // 获取学生信息
         getStudentInfo() {
-            getStudentInfo({id: store.getters.user_id}).then(res => {
-                this.form = res.data
-            })
+            if(store.getters.roles[0] === "editor") {
+                getStudentInfo({id: store.getters.user_id}).then(res => {
+                    this.form = res.data
+                })
+            } else if(store.getters.roles[0] === "admin") {
+                findAdminByAccount({admin_number: store.getters.user_id}).then(res => {
+                    console.log(res);
+                    this.form1 = res.data
+                })
+            }
         },
         getUserApplyData() {
             getUserApplyData({user_id: store.getters.user_id}).then(res => {
@@ -97,13 +136,24 @@ export default {
                 type: 'warning'
             }).then(() => {
                 this.isEdit = true
-                addStudent(this.form).then(res => {
-                    console.log(res)
-                })
-                this.$message({
-                    type: 'success',
-                    message: '修改成功!'
-                });
+                if(store.getters.roles[0] === "editor") {
+                    addStudent(this.form).then(res => {
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功!'
+                        });
+                    })
+                } else if(store.getters.roles[0] === "admin") {
+                    addAdmin(this.form1).then(res => {
+                        this.form1 = res.data
+                        this.$message({
+                            type: 'success',
+                            message: '修改成功!'
+                        });
+                    })
+                }
+
+
             }).catch(err => {
                this.isEdit = true
             })
