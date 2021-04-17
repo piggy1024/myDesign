@@ -124,7 +124,7 @@ export const constantRoutes = [{
     meta: {
       title: '教室使用情况',
       icon: 'el-icon-s-help',
-      roles: ['editor', 'admin']
+      roles: ['editor']
     },
     children: [{
       path: 'classroomList',
@@ -132,6 +132,23 @@ export const constantRoutes = [{
       component: () => import('@/views/classroomList/index'),
       meta: {
         title: '教室列表',
+        icon: 'table'
+      }
+    }]
+  },
+  // 教室管理
+  {
+    path: '/classroomManage',
+    meta: {
+      roles: ['admin']
+    },
+    component: Layout,
+    children: [{
+      path: 'indexApply',
+      name: 'ClassroomList',
+      component: () => import('@/views/classroomList/indexApply'),
+      meta: {
+        title: '教室管理',
         icon: 'table'
       }
     }]

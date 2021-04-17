@@ -23,3 +23,19 @@ export function getClassroomDetail(params) {
     params
   })
 }
+
+export function addClassroom(params) {
+  return request({
+    url: '/classrooms/addClassroom',
+    method: 'post',
+    params
+  })
+}
+
+export function deleteClassroom(params) {
+  return request({
+    url: '/classrooms/deleteClassroom',
+    method: 'post',
+    params
+  })
+}
