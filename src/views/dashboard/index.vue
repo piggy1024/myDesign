@@ -77,7 +77,7 @@ export default {
   data (){
     return {
       nbsp: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0',
-      urlList: [require('../../assets/images/1.jpg'), require('../../assets/images/2.jpg'), require('../../assets/images/3.jpg'), require('../../assets/images/1.png')],
+      urlList: [require('../../assets/images/classroomApply.png'), require('../../assets/images/postApply.png'), require('../../assets/images/personCenter.png')],
       newAnnouncement: {
         theme: '',
         content: '',
