@@ -34,11 +34,14 @@
                         <el-input v-model="form.stu_email" :disabled="isEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="密码">
-                        <el-input v-model="form.stu_password" :disabled="isEdit"></el-input>
+                        <el-input show-password v-model="form.stu_password" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item show-password label="确认密码" v-if="!isEdit">
+                        <el-input v-model="form.stu_password1" :disabled="isEdit"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">编辑</el-button>
-                        <el-button @click="confirm">确认</el-button>
+                        <el-button @click="confirm" :disabled="isEdit">确认</el-button>
                     </el-form-item>
                 </el-form>
             </el-row>
@@ -57,7 +60,10 @@
                         <el-input v-model="form1.admin_email" :disabled="isEdit"></el-input>
                     </el-form-item>
                     <el-form-item label="密码">
-                        <el-input v-model="form1.admin_password" :disabled="isEdit"></el-input>
+                        <el-input show-password v-model="form1.admin_password" :disabled="isEdit"></el-input>
+                    </el-form-item>
+                    <el-form-item label="确认密码" v-if="!isEdit">
+                        <el-input show-password v-model="form1.admin_password1" :disabled="isEdit"></el-input>
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="onSubmit">编辑</el-button>
