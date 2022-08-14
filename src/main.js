@@ -21,10 +21,10 @@ moment.locale('zh-cn')
 Vue.use(moment)
 
 
-import plan from '@hui-pro/plan';
+// import plan from '@hui-pro/plan';
 // 引入计划模板样式
-import './assets/index.scss'
-Vue.use(plan)
+// import './assets/index.scss'
+// Vue.use(plan)
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
